@@ -5,7 +5,12 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { User } from './../models/user.schema';
-import { CreateUserDto } from '../validator/user.schema';
+import {
+  CreateUserDto,
+  GetUserDto,
+  DeleteUserDto,
+  UpdateUserDto,
+} from '../validator/user.schema';
 import { UserDAO } from './../dao/user.dao';
 
 @Injectable()
@@ -29,16 +34,33 @@ class UserService {
     }
   }
 
-  async findOne(userId: string): Promise<User> {
-    const user = await this.userDAO.findOne(userId);
+  async findOne(getUserDao: GetUserDto): Promise<User> {
+    const user = await this.userDAO.findOne(getUserDao.userId);
     if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException(
+        `User with ID ${getUserDao.userId} not found`,
+      );
     }
     return user;
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userDAO.findAll();
+  async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const updatedUser = await this.userDAO.update(userId, updateUserDto);
+    if (!updatedUser) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+    return updatedUser;
+  }
+
+  async delete(deleteUserDto: DeleteUserDto): Promise<{ message: string }> {
+    const user = await this.userDAO.delete(deleteUserDto.userId);
+    if (!user) {
+      throw new NotFoundException(
+        `User with ID ${deleteUserDto.userId} not found`,
+      );
+    }
+
+    return { message: 'User deleted successfully' };
   }
 }
 

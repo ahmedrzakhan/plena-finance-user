@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './../models/user.schema';
-import { CreateUserDto } from '../validator/user.schema';
+import { CreateUserDto, UpdateUserDto } from '../validator/user.schema';
 
 @Injectable()
 class UserDAO {
@@ -20,8 +20,17 @@ class UserDAO {
     return this.userModel.findById(userId).exec();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async update(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User | null> {
+    return this.userModel
+      .findByIdAndUpdate(userId, { $set: updateUserDto }, { new: true })
+      .exec();
+  }
+
+  async delete(userId: string): Promise<User | null> {
+    return this.userModel.findByIdAndDelete(userId).exec();
   }
 }
 
