@@ -1,6 +1,13 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserService } from './../services/user.service';
-import { CreateUserDto } from './../dto/user.dto';
+import { createUserSchema, CreateUserDto } from '../validator/user.schema';
 import { User } from './../models/user.schema';
 
 @Controller('users')
@@ -11,7 +18,11 @@ class UserController {
   async create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<{ message: string; user?: User }> {
-    return this.userService.create(createUserDto);
+    const { error, value } = createUserSchema.validate(createUserDto);
+    if (error) {
+      throw new BadRequestException(error.details[0].message);
+    }
+    return this.userService.create(value);
   }
 
   @Get(':userId')

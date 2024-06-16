@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './../models/user.schema';
-import { CreateUserDto } from './../dto/user.dto';
+import { CreateUserDto } from '../validator/user.schema';
 
 @Injectable()
 class UserService {
