@@ -8,9 +8,10 @@ interface User extends Document {
 
 const UserSchema: Schema = new Schema(
   {
-    name: String,
-    email: String,
-    age: Number,
+    name: { type: String, required: true },
+    surname: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    birthDate: { type: Date, required: true },
   },
   { collection: 'users' },
 );

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { UserService } from './../services/user.service';
 import { CreateUserDto } from './../dto/user.dto';
 import { User } from './../models/user.schema';
@@ -8,13 +8,16 @@ class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<{ message: string; user?: User }> {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  @Get(':userId')
+  async findOne(@Param('userId') userId: string): Promise<User> {
+    // read from JWT
+    return this.userService.findOne(userId);
   }
 }
 
