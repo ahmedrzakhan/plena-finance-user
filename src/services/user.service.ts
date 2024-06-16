@@ -4,24 +4,19 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { User } from './../models/user.schema';
 import { CreateUserDto } from '../validator/user.schema';
+import { UserDAO } from './../dao/user.dao';
 
 @Injectable()
 class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(private readonly userDAO: UserDAO) {} // Inject the DAO
 
   async create(
     createUserDto: CreateUserDto,
   ): Promise<{ message: string; user: User }> {
     try {
-      const createdUser = new this.userModel({
-        ...createUserDto,
-        birthDate: new Date(createUserDto.birthDate),
-      });
-      const savedUser = await createdUser.save();
+      const savedUser = await this.userDAO.create(createUserDto);
       return {
         message: 'User created successfully',
         user: savedUser,
@@ -35,7 +30,7 @@ class UserService {
   }
 
   async findOne(userId: string): Promise<User> {
-    const user = await this.userModel.findById(userId).exec();
+    const user = await this.userDAO.findOne(userId);
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
@@ -43,7 +38,7 @@ class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return this.userDAO.findAll();
   }
 }
 

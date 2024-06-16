@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { UserController } from './controller/user.controller';
 import { AppService } from './app.service';
 import { UserService } from './services/user.service';
+import { UserDAO } from './dao/user.dao';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './models/user.schema';
@@ -13,6 +14,6 @@ import { UserSchema } from './models/user.schema';
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  providers: [AppService, UserService, UserDAO],
 })
 export class AppModule {}
