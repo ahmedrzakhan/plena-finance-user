@@ -10,7 +10,7 @@ import { UserService } from './../services/user.service';
 import { createUserSchema, CreateUserDto } from '../validator/user.schema';
 import { User } from './../models/user.schema';
 
-@Controller('users')
+@Controller('user')
 class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -27,7 +27,6 @@ class UserController {
 
   @Get(':userId')
   async findOne(@Param('userId') userId: string): Promise<User> {
-    // read from JWT
     return this.userService.findOne(userId);
   }
 }
