@@ -42,7 +42,7 @@ export class BlockUserController {
     );
     return {
       blockedUser,
-      message: 'User blocked successfully',
+      message: 'Users blocked successfully',
     };
   }
 
