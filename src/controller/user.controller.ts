@@ -50,7 +50,7 @@ class UserController {
   async update(
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  ): Promise<{ message: string; user?: User }> {
     const { error: userIdError } = Joi.string()
       .length(24)
       .hex()
