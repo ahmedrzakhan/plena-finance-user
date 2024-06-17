@@ -16,4 +16,6 @@ const UserSchema: Schema = new Schema(
   { collection: 'users' },
 );
 
+UserSchema.index({ birthDate: 1 });
+
 export { User, UserSchema };
