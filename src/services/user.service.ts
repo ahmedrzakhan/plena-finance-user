@@ -44,12 +44,15 @@ class UserService {
     return user;
   }
 
-  async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<{ message: string; user: User }> {
     const updatedUser = await this.userDAO.update(userId, updateUserDto);
     if (!updatedUser) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
-    return updatedUser;
+    return { user: updatedUser, message: 'User updated successfully' };
   }
 
   async delete(deleteUserDto: DeleteUserDto): Promise<{ message: string }> {
