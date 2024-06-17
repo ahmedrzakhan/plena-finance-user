@@ -13,6 +13,4 @@ const BlockedUserSchema: Schema = new Schema(
   { collection: 'blockedUsers' },
 );
 
-BlockedUserSchema.index({ userId: 1 });
-
 export { BlockedUser, BlockedUserSchema };
