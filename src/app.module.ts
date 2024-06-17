@@ -7,13 +7,14 @@ import { UserDAO } from './dao/user.dao';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './models/user.schema';
+import { BlockController } from './block/block.controller';
 
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.MONGODB_URI),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
-  controllers: [AppController, UserController],
+  controllers: [AppController, UserController, BlockController],
   providers: [AppService, UserService, UserDAO],
 })
 export class AppModule {}
