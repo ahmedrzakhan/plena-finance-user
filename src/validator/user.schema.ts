@@ -44,6 +44,18 @@ const deleteUserSchema = Joi.object({
   userId: Joi.string().hex().length(24).required(),
 });
 
+class SearchUserDto {
+  minAge?: number;
+  maxAge?: number;
+  username?: string;
+}
+
+const SearchUserDtoSchema = Joi.object({
+  minAge: Joi.number().min(18).optional(),
+  maxAge: Joi.number().max(120).optional(),
+  username: Joi.string().optional(),
+}).or('minAge', 'maxAge', 'username');
+
 export {
   createUserSchema,
   CreateUserDto,
@@ -53,4 +65,6 @@ export {
   getUserSchema,
   DeleteUserDto,
   deleteUserSchema,
+  SearchUserDto,
+  SearchUserDtoSchema,
 };

@@ -5,6 +5,7 @@ import {
   Put,
   Delete,
   Body,
+  Query,
   Param,
   BadRequestException,
 } from '@nestjs/common';
@@ -19,6 +20,8 @@ import {
   updateUserSchema,
   DeleteUserDto,
   deleteUserSchema,
+  SearchUserDto,
+  SearchUserDtoSchema,
 } from '../validator/user.schema';
 import { User } from './../models/user.schema';
 
@@ -34,16 +37,27 @@ class UserController {
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    return this.userService.create(value);
+    const { user } = await this.userService.create(value);
+    return {
+      message: 'User created successfully',
+      user,
+    };
   }
 
   @Get(':userId')
-  async findOne(@Param() getUserDto: GetUserDto): Promise<User> {
+  async findOne(
+    @Param() getUserDto: GetUserDto,
+  ): Promise<{ user: User; message: string }> {
     const { error, value } = getUserSchema.validate(getUserDto);
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    return this.userService.findOne(value);
+    const user = await this.userService.findOne(value);
+
+    return {
+      message: 'User returned successfully',
+      user,
+    };
   }
 
   @Put(':userId')
@@ -63,7 +77,8 @@ class UserController {
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    return this.userService.update(userId, value);
+    const { user } = await this.userService.update(userId, value);
+    return { user, message: 'User updated successfully' };
   }
 
   @Delete(':userId')
@@ -74,7 +89,23 @@ class UserController {
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    return this.userService.delete(value);
+    await this.userService.delete(value);
+    return { message: 'User deleted successfully' };
+  }
+
+  @Post('/search')
+  async search(
+    @Query() query: SearchUserDto,
+  ): Promise<{ users: User[]; message: string }> {
+    const { error, value } = SearchUserDtoSchema.validate(query);
+    if (error) {
+      throw new BadRequestException(error.details[0].message);
+    }
+    const { users } = await this.userService.search(value);
+    return {
+      users,
+      message: 'Users returned successfully',
+    };
   }
 }
 

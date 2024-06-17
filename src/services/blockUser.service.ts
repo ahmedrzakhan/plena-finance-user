@@ -10,7 +10,7 @@ class BlockUserService {
   async blockUsers(
     userId: string,
     blockUserDto: BlockUserDto,
-  ): Promise<{ message: string; blockedUser: BlockedUser }> {
+  ): Promise<{ blockedUser: BlockedUser }> {
     const updatedUser = await this.blockUserDAO.blockUsers(
       userId,
       blockUserDto,
@@ -19,7 +19,6 @@ class BlockUserService {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
     return {
-      message: 'User blocked successfully',
       blockedUser: updatedUser,
     };
   }
@@ -27,7 +26,7 @@ class BlockUserService {
   async unblockUsers(
     userId: string,
     unblockUserDto: UnblockUserDto,
-  ): Promise<{ message: string; blockedUser: BlockedUser }> {
+  ): Promise<{ unblockedUser: BlockedUser }> {
     const updatedUser = await this.blockUserDAO.unblockUsers(
       userId,
       unblockUserDto,
@@ -36,8 +35,7 @@ class BlockUserService {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
     return {
-      message: 'Users unblocked successfully',
-      blockedUser: updatedUser,
+      unblockedUser: updatedUser,
     };
   }
 }

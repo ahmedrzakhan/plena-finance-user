@@ -10,6 +10,7 @@ import {
   GetUserDto,
   DeleteUserDto,
   UpdateUserDto,
+  SearchUserDto,
 } from '../validator/user.schema';
 import { UserDAO } from './../dao/user.dao';
 
@@ -64,6 +65,11 @@ class UserService {
     }
 
     return { message: 'User deleted successfully' };
+  }
+
+  async search(searchUserDto: SearchUserDto): Promise<{ users: User[] }> {
+    const users = await this.userDAO.search(searchUserDto);
+    return { users };
   }
 }
 

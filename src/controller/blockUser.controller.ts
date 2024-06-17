@@ -13,6 +13,7 @@ import {
   BlockUserDto,
   blockUserSchema,
 } from '../validator/blockedUser.schema';
+import { BlockedUser } from './../models/blockedUser.schema';
 
 @Controller('blocked-users')
 export class BlockUserController {
@@ -22,7 +23,7 @@ export class BlockUserController {
   async blockUser(
     @Param('userId') userId: string,
     @Body() blockUserDto: BlockUserDto,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; blockedUser: BlockedUser }> {
     const { error: userIdError } = Joi.string()
       .length(24)
       .hex()
@@ -35,14 +36,21 @@ export class BlockUserController {
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    return this.blockUserService.blockUsers(userId, value);
+    const { blockedUser } = await this.blockUserService.blockUsers(
+      userId,
+      value,
+    );
+    return {
+      blockedUser,
+      message: 'User blocked successfully',
+    };
   }
 
   @Post(':userId/unblock')
   async unblockUser(
     @Param('userId') userId: string,
     @Body() unblockUserDto: UnblockUserDto,
-  ): Promise<{ message: string }> {
+  ): Promise<{ unblockedUser: BlockedUser; message: string }> {
     const { error: userIdError } = Joi.string()
       .length(24)
       .hex()
@@ -55,6 +63,13 @@ export class BlockUserController {
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    return this.blockUserService.unblockUsers(userId, value);
+    const { unblockedUser } = await this.blockUserService.unblockUsers(
+      userId,
+      value,
+    );
+    return {
+      message: 'Users unblocked successfully',
+      unblockedUser,
+    };
   }
 }
