@@ -7,7 +7,7 @@ import { UserDAO } from './dao/user.dao';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './models/user.schema';
-import { BlockController } from './block/block.controller';
+import { BlockController } from './controller/block.controller';
 
 @Module({
   imports: [
