@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './../models/user.schema';
+import { BlockedUser } from '../models/blockedUser.schema';
 import {
   CreateUserDto,
   UpdateUserDto,
@@ -10,7 +11,11 @@ import {
 
 @Injectable()
 class UserDAO {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<User>,
+    @InjectModel('BlockedUser')
+    private readonly blockedUserModel: Model<BlockedUser>,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel({
@@ -21,7 +26,7 @@ class UserDAO {
   }
 
   async findOne(userId: string): Promise<User | null> {
-    return this.userModel.findById(userId).exec();
+    return this.userModel.findById(userId).lean().exec();
   }
 
   async update(
@@ -30,15 +35,35 @@ class UserDAO {
   ): Promise<User | null> {
     return this.userModel
       .findByIdAndUpdate(userId, { $set: updateUserDto }, { new: true })
+      .lean()
       .exec();
   }
 
   async delete(userId: string): Promise<User | null> {
-    return this.userModel.findByIdAndDelete(userId).exec();
+    return this.userModel.findByIdAndDelete(userId).lean().exec();
   }
 
-  async search(searchUserDto: SearchUserDto): Promise<User[]> {
-    return this.userModel.find(searchUserDto).exec();
+  async search(userId: string, searchUserDto: SearchUserDto): Promise<User[]> {
+    const query: any = {};
+
+    if (searchUserDto.minAge) {
+      query.age = { $gte: searchUserDto.minAge };
+    }
+
+    if (searchUserDto.maxAge) {
+      query.age = { ...query.age, $lte: searchUserDto.maxAge };
+    }
+
+    if (searchUserDto.username) {
+      const regex = new RegExp(searchUserDto.username, 'i');
+      query.username = { $regex: regex };
+    }
+
+    query._id = {
+      $nin: await this.blockedUserModel.distinct('blockedUsers', { userId }),
+    };
+
+    return this.userModel.find(query).lean().exec();
   }
 }
 

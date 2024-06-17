@@ -51,8 +51,8 @@ class SearchUserDto {
 }
 
 const SearchUserDtoSchema = Joi.object({
-  minAge: Joi.number().min(18).optional(),
-  maxAge: Joi.number().max(120).optional(),
+  minAge: Joi.number().min(1).optional(),
+  maxAge: Joi.number().max(140).optional(),
   username: Joi.string().optional(),
 }).or('minAge', 'maxAge', 'username');
 

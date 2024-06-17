@@ -67,8 +67,11 @@ class UserService {
     return { message: 'User deleted successfully' };
   }
 
-  async search(searchUserDto: SearchUserDto): Promise<{ users: User[] }> {
-    const users = await this.userDAO.search(searchUserDto);
+  async search(
+    userId: string,
+    searchUserDto: SearchUserDto,
+  ): Promise<{ users: User[] }> {
+    const users = await this.userDAO.search(userId, searchUserDto);
     return { users };
   }
 }

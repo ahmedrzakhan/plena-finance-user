@@ -21,6 +21,7 @@ class BlockedUserDAO {
         { $addToSet: { blockedUsers: blockUserDto.blockedUsers } },
         { new: true, upsert: true },
       )
+      .lean()
       .exec();
     return user;
   }
@@ -35,6 +36,7 @@ class BlockedUserDAO {
         { $pullAll: { blockedUsers: unblockUserDto.unblockedUsers } },
         { new: true },
       )
+      .lean()
       .exec();
     if (!user) {
       throw new NotFoundException('User not found');

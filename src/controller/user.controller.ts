@@ -93,18 +93,33 @@ class UserController {
     return { message: 'User deleted successfully' };
   }
 
-  @Post('/search')
+  @Get(':userId/actions/search')
   async search(
+    @Param('userId') userId: string,
     @Query() query: SearchUserDto,
   ): Promise<{ users: User[]; message: string }> {
+    const { error: userIdError } = Joi.string()
+      .length(24)
+      .hex()
+      .validate(userId);
+    if (userIdError) {
+      throw new BadRequestException('Invalid userId format');
+    }
     const { error, value } = SearchUserDtoSchema.validate(query);
     if (error) {
       throw new BadRequestException(error.details[0].message);
     }
-    const { users } = await this.userService.search(value);
+
+    let message;
+    const { users } = await this.userService.search(userId, value);
+    if (users.length) {
+      message = 'Users returned successfully';
+    } else {
+      message = 'No users found';
+    }
     return {
       users,
-      message: 'Users returned successfully',
+      message,
     };
   }
 }
