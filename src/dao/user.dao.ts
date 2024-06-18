@@ -45,13 +45,27 @@ class UserDAO {
 
   async search(userId: string, searchUserDto: SearchUserDto): Promise<User[]> {
     const query: any = {};
-
-    if (searchUserDto.minAge) {
-      query.age = { $gte: searchUserDto.minAge };
-    }
+    const today = new Date();
 
     if (searchUserDto.maxAge) {
-      query.age = { ...query.age, $lte: searchUserDto.maxAge };
+      query.birthDate = {};
+      const minBirthDate = new Date(
+        today.getFullYear() - searchUserDto.maxAge,
+        today.getMonth(),
+        today.getDate() + 1,
+      );
+      query.birthDate.$gte = minBirthDate.toISOString();
+    }
+
+    if (searchUserDto.minAge) {
+      query.birthDate = { ...query.birthDate };
+      const maxBirthDate = new Date(
+        today.getFullYear() - searchUserDto.minAge - 1,
+        today.getMonth(),
+        today.getDate() + 1,
+      );
+
+      query.birthDate.$lte = maxBirthDate.toISOString();
     }
 
     if (searchUserDto.username) {
