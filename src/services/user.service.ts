@@ -4,6 +4,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { RedisService } from './../cache/redis.service';
+
 import { User } from './../models/user.schema';
 import {
   CreateUserDto,
@@ -16,7 +18,10 @@ import { UserDAO } from './../dao/user.dao';
 
 @Injectable()
 class UserService {
-  constructor(private readonly userDAO: UserDAO) {} // Inject the DAO
+  constructor(
+    private readonly userDAO: UserDAO,
+    private readonly redisService: RedisService,
+  ) {} // Inject the DAO
 
   async create(
     createUserDto: CreateUserDto,
@@ -35,13 +40,23 @@ class UserService {
     }
   }
 
-  async findOne(getUserDao: GetUserDto): Promise<User> {
-    const user = await this.userDAO.findOne(getUserDao.userId);
+  async findOne(getUserDto: GetUserDto): Promise<User> {
+    const userId = getUserDto.userId;
+    const redisKey = `user:${userId}`;
+
+    const userJson = await this.redisService.get(redisKey);
+    if (userJson) {
+      return JSON.parse(userJson);
+    }
+    const user = await this.userDAO.findOne(getUserDto.userId);
     if (!user) {
       throw new NotFoundException(
-        `User with ID ${getUserDao.userId} not found`,
+        `User with ID ${getUserDto.userId} not found`,
       );
     }
+
+    this.redisService.set(redisKey, JSON.stringify(user), 86400);
+
     return user;
   }
 

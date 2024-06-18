@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RedisModule } from './cache/redis.module';
+import { RedisService } from './cache/redis.service';
+
 import { AppController } from './app.controller';
 import { UserController } from './controller/user.controller';
 import { AppService } from './app.service';
@@ -19,10 +22,12 @@ import { BlockUserController } from './controller/blockUser.controller';
       { name: 'User', schema: UserSchema },
       { name: 'BlockedUser', schema: BlockedUserSchema },
     ]),
+    RedisModule,
   ],
   controllers: [AppController, UserController, BlockUserController],
   providers: [
     AppService,
+    RedisService,
     UserService,
     BlockUserService,
     UserDAO,
