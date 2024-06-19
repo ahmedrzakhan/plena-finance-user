@@ -1,73 +1,98 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Plena Finance User
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+This project provides a robust API for managing user operations and interactions within the Plena Finance system. It offers functionalities for user creation, retrieval, updating, deletion, blocking, unblocking, and searching, ensuring comprehensive user management capabilities.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
+- User Management:
+Create, Read, Update, Delete User (CRUD operations).
+- Block/Unblock User:
+Block or unblock users to manage access and interactions.
+- Search Users:
+Search for users based on specified criteria.
+  
+## Technology Stack
+- **Backend**: Node.js, NestJS
+- **Database**: MongoDB (for user data), Redis (for caching)
+- **Others**: Postman (for API testing and documentation)
 
 ## Installation
 
+### Prerequisites
+- Node.js
+- MongoDB
+- Redis
+- NestJS
+
+### Steps
+1. Clone the repository:
 ```bash
-$ npm install
+git clone https://github.com/ahmedrzakhan/plena-finance-user.git
 ```
 
-## Running the app
-
+Navigate to the project directory:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cd plena-finance-user
 ```
 
-## Test
-
+Install the dependencies:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Support
+Set up the environment variables:
+Create a .env file in the root directory.
+Add the following environment variables:
+```bash
+MONGODB_URI=your_mongodb_uri
+REDIS_HOST=your_redis_host
+REDIS_PORT=your_redis_port
+REDIS_PASSWORD=your_redis_password
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Start the server:
+```bash
+npm start
+```
 
-## Stay in touch
+## API Endpoints
+You can find the Postman collection with all the API endpoints [here](https://www.postman.com/grey-capsule-23433/workspace/github-projects/folder/11844553-383662fa-c1ae-455f-917a-5c051fd98004?action=share&creator=11844553&ctx=documentation)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### User Management:
+```bash
+GET /api/user/:id - Get user by ID
+CREATE /api/user - Create user by unique username
+PUT /api/user/:id - Update user by ID
+DELETE /api/user/:id - Delete user by ID
+```
 
-## License
+###  Block User:
+```bash
+POST blocked-users/:userId/block - Blocks a user specified by userId.
+```
 
-Nest is [MIT licensed](LICENSE).
+### Unblock User:
+```
+POST blocked-users/:userId/unblock - Unblocks a user specified by userId.
+```
+
+### Search Users:
+```bash
+GET user/:userId/actions/search - Retrieves users filtered by the provided criteria, excluding those who have been blocked.
+Parameters:
+username: Specifies the username to search for.
+minAge (optional): Specifies the minimum age for filtering users.
+maxAge (optional): Specifies the maximum age for filtering users.
+```
+
+## Running Tests
+To ensure the quality and functionality of the application, have implemented various test cases. You can run these tests using the following command:
+```bash
+npm test
+```
+
+Contact
+* Author: [Ahmed Raza Khan](https://github.com/ahmedrzakhan)
+* Email: khanahmed925@gmail.com
+* LinkedIn: [Ahmed Raza Khan](https://www.linkedin.com/in/ahmedrza/)
+
