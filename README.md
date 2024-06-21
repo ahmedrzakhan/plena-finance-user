@@ -55,8 +55,22 @@ Start the server:
 npm start
 ```
 
+## Postman Collection
+
+You can find the Postman collection with all the API endpoints
+> **🔗 [Postman Collection Link](https://www.postman.com/grey-capsule-23433/workspace/github-projects/folder/11844553-383662fa-c1ae-455f-917a-5c051fd98004?action=share&creator=11844553&ctx=documentation)**
+
+
+### API Documentation
+
+The Postman collection includes all necessary endpoints for the project. Each endpoint is documented with:
+- HTTP method
+- Request URL
+- Required headers
+- Request body (if applicable)
+- Example responses
+
 ## API Endpoints
-You can find the Postman collection with all the API endpoints [here](https://www.postman.com/grey-capsule-23433/workspace/github-projects/folder/11844553-383662fa-c1ae-455f-917a-5c051fd98004?action=share&creator=11844553&ctx=documentation)
 
 ### User Management:
 ```bash
